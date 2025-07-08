@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.edu.ifce.meuprimeirospringboot.enums.Raca;
+import br.edu.ifce.meuprimeirospringboot.model.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +39,28 @@ public class Usuario {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date dtNascimento;
+
+	@Column(nullable = false)
+	private String senha;
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Role> roles;
 
 	@Enumerated(EnumType.STRING)
 	private Raca raca;

@@ -51,14 +51,14 @@ public class SecurityConfig {
 
         return http.build();
     }
-	
-	@Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
+
+    @Bean
+    UserDetailsService userDetailsService(UsuarioRepository userRepository) {
         return new CustomUserDetailsService();
     }
-	
-	@Bean
-	public  BCryptPasswordEncoder passwordEncoder() {
+
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 }

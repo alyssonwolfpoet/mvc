@@ -1,0 +1,1210 @@
+==== ÁRVORE DO PROJETO ====
+|- src
+  |- main
+    |- java
+      |- br
+        |- edu
+          |- ifce
+            |- meuprimeirospringboot
+              |- beans
+                |- Disciplina.java
+                |- Endereco.java
+                |- Telefone.java
+                |- Usuario.java
+              |- controller
+                |- Home.java
+                |- UsuarioController.java
+                |- UsuarioViewController.java
+              |- dto
+                |- CpfDTO.java
+              |- enums
+                |- Raca.java
+              |- exceptions
+                |- GlobalExceptionHandler.java
+                |- UsuarioNaoEncontradoException.java
+              |- model
+                |- Role.java
+                |- RoleName.java
+              |- repository
+                |- EnderecoRepository.java
+                |- TelefoneRepository.java
+                |- UsuarioRepository.java
+              |- security
+                |- CustomUserDetailsService.java
+                |- SecurityConfig.java
+              |- service
+                |- UsuarioService.java
+              |- serviceImpl
+                |- UsuarioServiceImpl.java
+              |- MeuprimeirospringbootApplication.java
+    |- resources
+      |- static
+      |- templates
+        |- usuario-form.html
+        |- usuario-lista.html
+      |- application.properties
+  |- test
+    |- java
+      |- br
+        |- edu
+          |- ifce
+            |- meuprimeirospringboot
+              |- MeuprimeirospringbootApplicationTests.java
+|- .gitignore
+|- exportar-projeto.ps1
+|- HELP.md
+|- mvnw
+|- mvnw.cmd
+|- pom.xml
+|- projeto_exportado.txt
+|- README.md
+
+==== CÓDIGOS FONTE ====
+
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Disciplina.java ====
+package br.edu.ifce.meuprimeirospringboot.beans;
+
+
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+
+@Entity
+public class Disciplina {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	
+	private String ano;
+	
+	private String periodo;
+	
+	private String nome;
+	
+	private String professor;
+	
+	@ManyToMany(mappedBy = "disciplinas")
+	private List<Usuario> alunos;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getAno() {
+		return ano;
+	}
+
+	public void setAno(String ano) {
+		this.ano = ano;
+	}
+
+	public String getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(String periodo) {
+		this.periodo = periodo;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getProfessor() {
+		return professor;
+	}
+
+	public void setProfessor(String professor) {
+		this.professor = professor;
+	}
+
+	public List<Usuario> getAlunos() {
+		return alunos;
+	}
+
+	public void setAlunos(List<Usuario> alunos) {
+		this.alunos = alunos;
+	}
+
+	
+	
+	
+	
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Disciplina.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Endereco.java ====
+package br.edu.ifce.meuprimeirospringboot.beans;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+
+@Entity
+public class Endereco {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	private String logradouro;
+	private String cep;
+	private String bairro;
+	private String numero;
+	@OneToOne(mappedBy = "endereco",cascade = CascadeType.ALL)
+	@JsonBackReference
+	private Usuario usuario;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getLogradouro() {
+		return logradouro;
+	}
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
+	}
+	public String getCep() {
+		return cep;
+	}
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+	public String getBairro() {
+		return bairro;
+	}
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+	public String getNumero() {
+		return numero;
+	}
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Endereco.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Telefone.java ====
+package br.edu.ifce.meuprimeirospringboot.beans;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Telefone {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	
+	private String numero;
+	
+	private Boolean isWpp;
+	
+	private Boolean isPrincipal;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public Boolean getIsWpp() {
+		return isWpp;
+	}
+
+	public void setIsWpp(Boolean isWpp) {
+		this.isWpp = isWpp;
+	}
+
+	public Boolean getIsPrincipal() {
+		return isPrincipal;
+	}
+
+	public void setIsPrincipal(Boolean isPrincipal) {
+		this.isPrincipal = isPrincipal;
+	}
+	
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Telefone.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Usuario.java ====
+package br.edu.ifce.meuprimeirospringboot.beans;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import br.edu.ifce.meuprimeirospringboot.enums.Raca;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
+
+@Entity
+public class Usuario {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	@Column(name = "name")
+	private String nome;
+	@Column(nullable = false)
+	private String email;
+	@Column(length = 11, unique = true, updatable = true)
+	private String cpf;
+	// @Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	private Date dtNascimento;
+
+	@Enumerated(EnumType.STRING)
+	private Raca raca;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Endereco endereco;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "usuario_id")
+	private List<Telefone> telefones;
+
+	@Transient
+	private int idade;
+
+	@ManyToMany
+	private List<Disciplina> disciplinas;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public Date getDtNascimento() {
+		return dtNascimento;
+	}
+
+	public void setDtNascimento(Date dtNascimento) {
+		this.dtNascimento = dtNascimento;
+	}
+
+	public Raca getRaca() {
+		return raca;
+	}
+
+	public void setRaca(Raca raca) {
+		this.raca = raca;
+	}
+
+	public int getIdade() {
+		return idade;
+	}
+
+	public void setIdade(int idade) {
+		this.idade = idade;
+	}
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
+	public List<Telefone> getTelefones() {
+		return telefones;
+	}
+
+	public void setTelefones(List<Telefone> telefones) {
+		this.telefones = telefones;
+	}
+
+	public List<Disciplina> getDisciplinas() {
+		return disciplinas;
+	}
+
+	public void setDisciplinas(List<Disciplina> disciplinas) {
+		this.disciplinas = disciplinas;
+	}
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Usuario.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\Home.java ====
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class Home {
+	@GetMapping("/hello")
+	public Map<String,String> helloWord(){
+		 Map<String, String> response = new HashMap<>();
+		 response.put("messagem", "Hello World!");
+		 return response;
+	}
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\Home.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\UsuarioController.java ====
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+import br.edu.ifce.meuprimeirospringboot.dto.CpfDTO;
+import br.edu.ifce.meuprimeirospringboot.serviceImpl.UsuarioServiceImpl;
+
+@RestController
+@RequestMapping("/usuarios")
+public class UsuarioController {
+	@Autowired
+	private UsuarioServiceImpl usuarioService;
+
+	// @RequestParam --> GET /usuario?cpf=12345678900
+	// @RequestBody --> GET /usuario/12345678900 @GetMapping("/usuario/{cpf}")
+	// @PathVariable --> Lê o corpo da requisição (normalmente JSON) e mapeia para
+	// um objeto Java.
+
+	@PostMapping("/buscar-por-cpf")
+	public ResponseEntity<Usuario> getUsuarioPorCPF(@RequestBody CpfDTO dto) {
+		Usuario usuario = usuarioService.buscarPorCPF(dto.getCpf());
+		return ResponseEntity.ok(usuario);
+	}
+
+	@PostMapping
+	public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
+		Usuario novoUsuario = usuarioService.salvar(usuario);
+		return ResponseEntity.ok(novoUsuario);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Usuario> editarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+		Usuario usuarioEditado = usuarioService.editar(id, usuarioAtualizado);
+		return ResponseEntity.ok(usuarioEditado);
+	}
+
+	@GetMapping
+	public List<Usuario> listarTodos() {
+		return usuarioService.listarTodos();
+	}
+
+	@DeleteMapping("/{id}")
+	public void excluir(@PathVariable Long id) {
+		usuarioService.deletar(id);
+	}
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\UsuarioController.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\UsuarioViewController.java ====
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+import br.edu.ifce.meuprimeirospringboot.serviceImpl.UsuarioServiceImpl;
+
+@Controller
+@RequestMapping("/usuarios")
+public class UsuarioViewController {
+
+    @Autowired
+    private UsuarioServiceImpl usuarioService;
+
+    @GetMapping("/form")
+    public String formUsuario(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        return "usuario-form";
+    }
+
+    @GetMapping("/lista")
+    public String listarUsuarios(Model model) {
+        model.addAttribute("usuarios", usuarioService.listarTodos());
+        return "usuario-lista";
+    }
+
+    @PostMapping("/salvar")
+    public String salvarUsuario(@ModelAttribute Usuario usuario) {
+        usuarioService.salvar(usuario);
+        return "redirect:/usuarios/lista";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        Usuario usuario = usuarioService.buscarPorId(id);
+        model.addAttribute("usuario", usuario);
+        return "usuario-form";
+    }
+
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Long id) {
+        usuarioService.deletar(id);
+        return "redirect:/usuarios/lista";
+    }
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\UsuarioViewController.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\dto\CpfDTO.java ====
+package br.edu.ifce.meuprimeirospringboot.dto;
+
+public class CpfDTO {
+	
+	private String cpf;
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\dto\CpfDTO.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\enums\Raca.java ====
+package br.edu.ifce.meuprimeirospringboot.enums;
+
+public enum Raca {
+	Branco,
+	Pardo,
+	Negro,
+	Indígena
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\enums\Raca.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\exceptions\GlobalExceptionHandler.java ====
+package br.edu.ifce.meuprimeirospringboot.exceptions;
+
+
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(UsuarioNaoEncontradoException.class)
+    public ResponseEntity<String> handleUsuarioNaoEncontrado(UsuarioNaoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+}
+
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\exceptions\GlobalExceptionHandler.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\exceptions\UsuarioNaoEncontradoException.java ====
+package br.edu.ifce.meuprimeirospringboot.exceptions;
+
+@SuppressWarnings("serial")
+public class UsuarioNaoEncontradoException extends RuntimeException {
+	public UsuarioNaoEncontradoException(String cpf) {
+        super("Usuário com CPF " + cpf + " não encontrado.");
+    }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\exceptions\UsuarioNaoEncontradoException.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\model\Role.java ====
+package br.edu.ifce.meuprimeirospringboot.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Role {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(unique = true)
+    private RoleName name;
+
+    public Role() {}
+
+    public Role(RoleName name) {
+        this.name = name;
+    }
+    public RoleName getName() {
+        return name;
+    }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\model\Role.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\model\RoleName.java ====
+package br.edu.ifce.meuprimeirospringboot.model;
+
+public enum RoleName {
+    ALUNO, FUNCIONARIO, ADMIN
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\model\RoleName.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\EnderecoRepository.java ====
+package br.edu.ifce.meuprimeirospringboot.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Endereco;
+
+public interface EnderecoRepository extends JpaRepository<Endereco, Long>{
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\EnderecoRepository.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\TelefoneRepository.java ====
+package br.edu.ifce.meuprimeirospringboot.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Telefone;
+
+public interface TelefoneRepository extends JpaRepository<Telefone, Long> {
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\TelefoneRepository.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\UsuarioRepository.java ====
+package br.edu.ifce.meuprimeirospringboot.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+
+public interface UsuarioRepository extends JpaRepository<Usuario,Long > {
+
+	 Optional<Usuario> findByCpf(String cpf);	
+	
+
+	
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\UsuarioRepository.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\security\CustomUserDetailsService.java ====
+package br.edu.ifce.meuprimeirospringboot.security;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+import br.edu.ifce.meuprimeirospringboot.repository.UsuarioRepository;
+
+public class CustomUserDetailsService implements UserDetailsService {
+	@Autowired
+	private UserRepository user;
+
+	@Override
+
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+		User u = user.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+		System.out.println("Usuário Logado: " + u.getNome());
+		
+		Set<GrantedAuthority> authorities = u.getRoles().stream()
+				.map(role -> (GrantedAuthority) () -> "ROLE_" +  role.getName().name()).collect(Collectors.toSet());
+		
+		System.out.println(authorities);
+
+		return org.springframework.security.core.userdetails.User.builder()
+				.username(u.getEmail())
+				.password(u.getPassword())
+				.authorities(authorities)
+				.accountExpired(false)
+				.accountLocked(false)
+				.credentialsExpired(false)
+				.disabled(false)
+				.build();
+
+	}
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\security\CustomUserDetailsService.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\security\SecurityConfig.java ====
+package br.edu.ifce.meuprimeirospringboot.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.SecurityFilterChain;
+
+import br.edu.ifce.meuprimeirospringboot.repository.UsuarioRepository;
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+
+@Configuration
+public class SecurityConfig {
+
+	@Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/","/webjars/**","/css/**", "/js/**", "/image/**","/uploads/**","/static/**").permitAll()
+                .requestMatchers("/aluno/cadastrar").permitAll()
+                .requestMatchers("/aluno/confirmar-cadastro").permitAll()
+                .requestMatchers("/confirmar-email").permitAll()
+                //
+                .requestMatchers("/api/inscricoes/inscrever").permitAll()
+                //
+                .requestMatchers("/aluno/listar").hasRole("ADMIN")
+                .requestMatchers("/curso/cadastrar").hasRole("ADMIN") 
+                .requestMatchers("admin/dashboard").hasRole("ADMIN")
+                .requestMatchers("/polo/cadastrar").hasRole("ADMIN")
+                
+                .anyRequest().authenticated()    
+            )
+            .logout(logout -> logout
+                    .logoutUrl("/logout")                     
+                    .logoutSuccessUrl("/?logout=true")  
+                    .invalidateHttpSession(true)             
+                    .deleteCookies("JSESSIONID")             
+                )
+            .formLogin(form -> form          
+                .loginPage("/login") 
+                .defaultSuccessUrl("/admin/dashboard", true)
+                .permitAll()                 
+            )
+            .sessionManagement(session -> session
+                    .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
+                    .maximumSessions(1) 
+                    .expiredUrl("/login?expired")
+                )
+            .httpBasic(httpBasic -> httpBasic.disable()); 
+
+        return http.build();
+    }
+
+    @Bean
+    UserDetailsService userDetailsService(UserRepository userRepository) {
+        return new CustomUserDetailsService();
+    }
+
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\security\SecurityConfig.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\UsuarioService.java ====
+package br.edu.ifce.meuprimeirospringboot.service;
+
+import java.util.List;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+
+public interface UsuarioService {
+	Usuario buscarPorCPF(String cpf);
+
+	Usuario salvar(Usuario usuario);
+
+	Usuario editar(Long id, Usuario usuarioAtualizado);
+
+	List<Usuario> listarTodos();
+
+	void deletar(Long id);
+
+	Usuario buscarPorId(Long id);
+
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\UsuarioService.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\serviceImpl\UsuarioServiceImpl.java ====
+package br.edu.ifce.meuprimeirospringboot.serviceImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+import br.edu.ifce.meuprimeirospringboot.exceptions.UsuarioNaoEncontradoException;
+import br.edu.ifce.meuprimeirospringboot.repository.UsuarioRepository;
+import br.edu.ifce.meuprimeirospringboot.service.UsuarioService;
+
+@Service
+public class UsuarioServiceImpl implements UsuarioService {
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+
+	@Override
+	public Usuario buscarPorCPF(String cpf) {
+		return usuarioRepository.findByCpf(cpf)
+				.orElseThrow(() -> new UsuarioNaoEncontradoException(cpf));
+	}
+
+	@Override
+	public Usuario salvar(Usuario usuario) {
+		return usuarioRepository.save(usuario);
+	}
+
+	@Override
+	public Usuario editar(Long id, Usuario usuarioAtualizado) {
+		Usuario existente = usuarioRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+
+		existente.setNome(usuarioAtualizado.getNome());
+		existente.setEmail(usuarioAtualizado.getEmail());
+		existente.setCpf(usuarioAtualizado.getCpf());
+		existente.setDtNascimento(usuarioAtualizado.getDtNascimento());
+		existente.setRaca(usuarioAtualizado.getRaca());
+		existente.setEndereco(usuarioAtualizado.getEndereco());
+		existente.setTelefones(usuarioAtualizado.getTelefones());
+		existente.setDisciplinas(usuarioAtualizado.getDisciplinas());
+
+		return usuarioRepository.save(existente);
+	}
+
+	@Override
+	public List<Usuario> listarTodos() {
+		return usuarioRepository.findAll();
+	}
+
+	@Override
+	public void deletar(Long id) {
+		usuarioRepository.deleteById(id);
+	}
+
+	@Override
+	public Usuario buscarPorId(Long id) {
+		return usuarioRepository.findById(id)
+				.orElseThrow(() -> new UsuarioNaoEncontradoException("ID: " + id));
+	}
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\serviceImpl\UsuarioServiceImpl.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\MeuprimeirospringbootApplication.java ====
+package br.edu.ifce.meuprimeirospringboot;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Endereco;
+import br.edu.ifce.meuprimeirospringboot.beans.Telefone;
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+import br.edu.ifce.meuprimeirospringboot.enums.Raca;
+import br.edu.ifce.meuprimeirospringboot.repository.UsuarioRepository;
+
+@SpringBootApplication
+public class MeuprimeirospringbootApplication implements CommandLineRunner  {
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+	
+	public static void main(String[] args) {
+		SpringApplication.run(MeuprimeirospringbootApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		
+		Usuario u = new Usuario();
+		u.setCpf("00000000000");
+		u.setNome("Fulano de Tal");
+		u.setEmail("fulano@gmail.com");
+		u.setRaca(Raca.Indígena);
+		u.setDtNascimento(new Date());
+		
+		Endereco e = new Endereco();
+		e.setBairro("Jereissati");
+		e.setCep("60000-000");
+		e.setLogradouro("Rua I");
+		e.setNumero("777");
+		
+		List<Telefone> l = new ArrayList<Telefone>();
+		Telefone t1 = new Telefone();
+		t1.setNumero("9999-9999");
+		t1.setIsPrincipal(true);
+		t1.setIsWpp(true);
+		l.add(t1);
+			
+		u.setEndereco(e);
+		u.setTelefones(l);
+	
+		usuarioRepository.save(u);
+
+		
+		Long n =  usuarioRepository.count();
+		System.out.println(n);
+		
+		
+		
+		
+	}
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\MeuprimeirospringbootApplication.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\usuario-form.html ====
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulário de Usuário</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2>Formulário de Usuário</h2>
+    <form th:action="@{/usuarios/salvar}" th:object="${usuario}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="mb-3">
+            <label>Nome:</label>
+            <input type="text" th:field="*{nome}" class="form-control"/>
+        </div>
+        <div class="mb-3">
+            <label>Email:</label>
+            <input type="email" th:field="*{email}" class="form-control"/>
+        </div>
+        <div class="mb-3">
+            <label>CPF:</label>
+            <input type="text" th:field="*{cpf}" class="form-control"/>
+        </div>
+        <div class="mb-3">
+            <label>Data de Nascimento:</label>
+            <input type="date" th:field="*{dtNascimento}" class="form-control"/>
+        </div>
+        <button class="btn btn-primary" type="submit">Salvar</button>
+    </form>
+</body>
+</html>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\usuario-form.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\usuario-lista.html ====
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Usuários</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2>Usuários</h2>
+    <a th:href="@{/usuarios/form}" class="btn btn-success mb-3">Novo Usuário</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr><th>ID</th><th>Nome</th><th>Email</th><th>Ações</th></tr>
+        </thead>
+        <tbody>
+            <tr th:each="u : ${usuarios}">
+                <td th:text="${u.id}"></td>
+                <td th:text="${u.nome}"></td>
+                <td th:text="${u.email}"></td>
+                <td>
+                    <a th:href="@{/usuarios/editar/{id}(id=${u.id})}" class="btn btn-warning btn-sm">Editar</a>
+                    <a th:href="@{/usuarios/excluir/{id}(id=${u.id})}" class="btn btn-danger btn-sm">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\usuario-lista.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\application.properties ====
+spring.application.name=meuprimeirospringboot
+
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.datasource.url=jdbc:mysql://localhost:3306/tjw20251?createDatabaseIfNotExist=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+
+spring.datasource.username=root
+spring.datasource.password=@abcd1234
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.jpa.show-sql: true
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\application.properties ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\test\java\br\edu\ifce\meuprimeirospringboot\MeuprimeirospringbootApplicationTests.java ====
+package br.edu.ifce.meuprimeirospringboot;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class MeuprimeirospringbootApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\test\java\br\edu\ifce\meuprimeirospringboot\MeuprimeirospringbootApplicationTests.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\HELP.md ====
+# Getting Started
+
+### Reference Documentation
+For further reference, please consider the following sections:
+
+* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
+* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.4.4/maven-plugin)
+* [Create an OCI image](https://docs.spring.io/spring-boot/3.4.4/maven-plugin/build-image.html)
+* [Spring Boot DevTools](https://docs.spring.io/spring-boot/3.4.4/reference/using/devtools.html)
+* [Spring Web](https://docs.spring.io/spring-boot/3.4.4/reference/web/servlet.html)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/3.4.4/reference/data/sql.html#data.sql.jpa-and-spring-data)
+* [Thymeleaf](https://docs.spring.io/spring-boot/3.4.4/reference/web/servlet.html#web.servlet.spring-mvc.template-engines)
+
+### Guides
+The following guides illustrate how to use some features concretely:
+
+* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
+* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
+* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
+* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
+* [Handling Form Submission](https://spring.io/guides/gs/handling-form-submission/)
+
+### Maven Parent overrides
+
+Due to Maven's design, elements are inherited from the parent POM to the project POM.
+While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
+To prevent this, the project POM contains empty overrides for these elements.
+If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\HELP.md ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\pom.xml ====
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.3</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>br.edu.ifce</groupId>
+	<artifactId>meuprimeirospringboot</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>meuprimeirospringboot</name>
+	<description>Descrição do projeto</description>
+	<url />
+	<licenses>
+		<license />
+	</licenses>
+	<developers>
+		<developer />
+	</developers>
+	<scm>
+		<connection />
+		<developerConnection />
+		<tag />
+		<url />
+	</scm>
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>5.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\pom.xml ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\README.md ====
+# mvc
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\README.md ====

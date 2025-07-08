@@ -9,35 +9,30 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import br.com.corneli.matriculese.beans.User;
-import br.com.corneli.matriculese.repository.UserRepository;
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+import br.edu.ifce.meuprimeirospringboot.repository.UsuarioRepository;
 
 public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
-	private UserRepository user;
+	private UsuarioRepository usuarioRepository;
 
 	@Override
-
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Usuario u = usuarioRepository.findByEmail(username)
+				.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-		User u = user.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
-		System.out.println("Usuário Logado: " + u.getNome());
-		
 		Set<GrantedAuthority> authorities = u.getRoles().stream()
-				.map(role -> (GrantedAuthority) () -> "ROLE_" +  role.getName().name()).collect(Collectors.toSet());
-		
-		System.out.println(authorities);
+				.map(role -> (GrantedAuthority) () -> "ROLE_" + role.getName().name())
+				.collect(Collectors.toSet());
 
 		return org.springframework.security.core.userdetails.User.builder()
 				.username(u.getEmail())
-				.password(u.getPassword())
+				.password(u.getSenha())
 				.authorities(authorities)
 				.accountExpired(false)
 				.accountLocked(false)
 				.credentialsExpired(false)
 				.disabled(false)
 				.build();
-
 	}
-
 }
