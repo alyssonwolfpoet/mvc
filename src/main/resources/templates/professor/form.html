@@ -1,1 +1,18 @@
-<h2>Formulário de Professor</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body class="d-flex">
+  <div th:replace="fragments/sidebar :: sidebar"></div>
+  <main class="flex-fill p-4">
+    <h2 th:text="${professor.id} != null ? 'Editar Professor' : 'Novo Professor'"></h2>
+    <form th:action="@{/professores/salvar}" th:object="${professor}" method="post">
+      <input type="hidden" th:field="*{id}"/>
+      <div class="mb-2"><label>Nome</label><input th:field="*{nome}" class="form-control"/></div>
+      <div class="mb-2"><label>Email</label><input th:field="*{email}" class="form-control"/></div>
+      <div class="mb-2"><label>Área</label><input th:field="*{areaAtuacao}" class="form-control"/></div>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+  </main>
+</body>
+<div th:replace="fragments/footer :: footer"></div>
+</html>

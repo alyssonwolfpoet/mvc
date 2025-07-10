@@ -1,1 +1,23 @@
-<h2>Lista de Professores</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body class="d-flex">
+  <div th:replace="fragments/sidebar :: sidebar"></div>
+  <main class="flex-fill p-4">
+    <h2>Professores</h2>
+    <a class="btn btn-success mb-2" href="/professores/form">Novo</a>
+    <table class="table">
+      <tr><th>Nome</th><th>Email</th><th>Ações</th></tr>
+      <tr th:each="p: ${professores}">
+        <td th:text="${p.nome}"></td>
+        <td th:text="${p.email}"></td>
+        <td>
+          <a th:href="@{'/professores/editar/' + ${p.id}}" class="btn btn-warning btn-sm">Editar</a>
+          <a th:href="@{'/professores/excluir/' + ${p.id}}" class="btn btn-danger btn-sm">Excluir</a>
+        </td>
+      </tr>
+    </table>
+  </main>
+</body>
+<div th:replace="fragments/footer :: footer"></div>
+</html>

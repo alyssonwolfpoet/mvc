@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body class="container mt-5">
+    <h2 class="mb-4">Login</h2>
+
+    <!-- Mensagem de erro se login falhar -->
+    <div th:if="${param.error}" class="alert alert-danger">
+        Usuário ou senha inválidos.
+    </div>
+
+    <!-- Mensagem se logout ocorrer -->
+    <div th:if="${param.logout}" class="alert alert-success">
+        Você saiu com sucesso.
+    </div>
+
+    <form th:action="@{/login}" method="post" class="w-50">
+        <div class="mb-3">
+            <label for="username" class="form-label">E-mail</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Digite seu e-mail" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Digite sua senha" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+</body>
+</html>

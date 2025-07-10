@@ -1,1 +1,18 @@
-<div>Sidebar dinâmica por role</div>
+<div th:fragment="sidebar" class="d-flex flex-column bg-light vh-100 p-3">
+  <nav class="nav nav-pills flex-column">
+    <a class="nav-link" href="/">Início</a>
+    <div sec:authorize="hasRole('ADMIN')">
+      <strong>Admin</strong>
+      <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+      <a class="nav-link" href="/usuarios/lista">Usuários</a>
+      <a class="nav-link" href="/professores/lista">Professores</a>
+      <a class="nav-link" href="/disciplinas/lista">Disciplinas</a>
+      <a class="nav-link" href="/turmas/lista">Turmas</a>
+      <a class="nav-link" href="/matriculas/lista">Matrículas</a>
+    </div>
+    <div sec:authorize="hasRole('ALUNO')">
+      <strong>Aluno</strong>
+      <a class="nav-link" href="/aluno/home">Área do Aluno</a>
+    </div>
+  </nav>
+</div>

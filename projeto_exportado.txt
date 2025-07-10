@@ -9,10 +9,16 @@
               |- beans
                 |- Disciplina.java
                 |- Endereco.java
+                |- Matricula.java
+                |- Professor.java
                 |- Telefone.java
+                |- Turma.java
                 |- Usuario.java
               |- controller
+                |- DisciplinaController.java
                 |- Home.java
+                |- MatriculaController.java
+                |- TurmaController.java
                 |- UsuarioController.java
                 |- UsuarioViewController.java
               |- dto
@@ -26,15 +32,21 @@
                 |- Role.java
                 |- RoleName.java
               |- repository
+                |- DisciplinaRepository.java
                 |- EnderecoRepository.java
+                |- MatriculaRepository.java
                 |- RoleRepository.java
                 |- TelefoneRepository.java
+                |- TurmaRepository.java
                 |- UsuarioRepository.java
               |- security
                 |- CustomSuccessHandler.java
                 |- CustomUserDetailsService.java
                 |- SecurityConfig.java
               |- service
+                |- DisciplinaService.java
+                |- MatriculaService.java
+                |- TurmaService.java
                 |- UsuarioService.java
               |- serviceImpl
                 |- UsuarioServiceImpl.java
@@ -42,14 +54,26 @@
     |- resources
       |- static
       |- templates
+        |- admin
+          |- dashboard.html
         |- aluno
           |- home.html
+        |- disciplina
+          |- form.html
+          |- lista.html
         |- fragments
           |- footer.html
           |- header.html
           |- mensagens.html
           |- navbar.html
+          |- sidebar.html
+        |- matricula
+          |- form.html
+          |- lista.html
         |- professor
+          |- form.html
+          |- lista.html
+        |- turma
           |- form.html
           |- lista.html
         |- index.html
@@ -228,6 +252,57 @@ public class Endereco {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Endereco.java ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Matricula.java ====
+package br.edu.ifce.meuprimeirospringboot.beans;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import br.edu.ifce.meuprimeirospringboot.enums.Raca;
+import br.edu.ifce.meuprimeirospringboot.model.Role;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
+
+@Entity
+public class Matricula {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    private Usuario aluno;
+
+    @ManyToOne
+    private Turma turma;
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Matricula.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Professor.java ====
+package br.edu.ifce.meuprimeirospringboot.beans;
+
+public class Professor {
+
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Professor.java ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Telefone.java ====
 package br.edu.ifce.meuprimeirospringboot.beans;
 
@@ -283,6 +358,33 @@ public class Telefone {
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Telefone.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Turma.java ====
+package br.edu.ifce.meuprimeirospringboot.beans;
+
+import org.springframework.data.annotation.Id;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Turma {
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String codigo;
+
+    @ManyToOne
+    private Disciplina disciplina;
+
+    @ManyToOne
+    private Professor professor;
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Turma.java ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Usuario.java ====
 package br.edu.ifce.meuprimeirospringboot.beans;
@@ -448,6 +550,60 @@ public class Usuario {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Usuario.java ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\DisciplinaController.java ====
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Disciplina;
+import br.edu.ifce.meuprimeirospringboot.service.DisciplinaService;
+
+@Controller
+@RequestMapping("/disciplinas")
+public class DisciplinaController {
+    @Autowired
+    private DisciplinaService service;
+
+    @GetMapping("/lista")
+    public String listar(Model model) {
+        model.addAttribute("disciplinas", service.listar());
+        return "disciplina/lista";
+    }
+
+    @GetMapping("/form")
+    public String form(Model model) {
+        model.addAttribute("disciplina", new Disciplina());
+        return "disciplina/form";
+    }
+
+    @PostMapping("/salvar")
+    public String salvar(@ModelAttribute Disciplina d) {
+        service.salvar(d);
+        return "redirect:/disciplinas/lista";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("disciplina", service.buscar(id));
+        return "disciplina/form";
+    }
+
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Long id) {
+        service.excluir(id);
+        return "redirect:/disciplinas/lista";
+    }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\DisciplinaController.java ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\Home.java ====
 package br.edu.ifce.meuprimeirospringboot.controller;
 
@@ -469,6 +625,114 @@ public class Home {
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\Home.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\MatriculaController.java ====
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Matricula;
+import br.edu.ifce.meuprimeirospringboot.service.MatriculaService;
+
+@Controller
+@RequestMapping("/matriculas")
+public class MatriculaController {
+    @Autowired
+    private MatriculaService service;
+
+    @GetMapping("/lista")
+    public String listar(Model model) {
+        model.addAttribute("matriculas", service.listar());
+        return "matricula/lista";
+    }
+
+    @GetMapping("/form")
+    public String form(Model model) {
+        model.addAttribute("matricula", new Matricula());
+        return "matricula/form";
+    }
+
+    @PostMapping("/salvar")
+    public String salvar(@ModelAttribute Matricula m) {
+        service.salvar(m);
+        return "redirect:/matriculas/lista";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("matricula", service.buscar(id));
+        return "matricula/form";
+    }
+
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Long id) {
+        service.excluir(id);
+        return "redirect:/matriculas/lista";
+    }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\MatriculaController.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\TurmaController.java ====
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Turma;
+import br.edu.ifce.meuprimeirospringboot.service.TurmaService;
+
+@Controller
+@RequestMapping("/turmas")
+public class TurmaController {
+    @Autowired
+    private TurmaService service;
+
+    @GetMapping("/lista")
+    public String listar(Model model) {
+        model.addAttribute("turmas", service.listar());
+        return "turma/lista";
+    }
+
+    @GetMapping("/form")
+    public String form(Model model) {
+        model.addAttribute("turma", new Turma());
+        return "turma/form";
+    }
+
+    @PostMapping("/salvar")
+    public String salvar(@ModelAttribute Turma t) {
+        service.salvar(t);
+        return "redirect:/turmas/lista";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        model.addAttribute("turma", service.buscar(id));
+        return "turma/form";
+    }
+
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Long id) {
+        service.excluir(id);
+        return "redirect:/turmas/lista";
+    }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\TurmaController.java ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\UsuarioController.java ====
 package br.edu.ifce.meuprimeirospringboot.controller;
@@ -701,6 +965,19 @@ public enum RoleName {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\model\RoleName.java ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\DisciplinaRepository.java ====
+package br.edu.ifce.meuprimeirospringboot.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Disciplina;
+
+@Repository
+public interface DisciplinaRepository extends JpaRepository<Disciplina, Long> {}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\DisciplinaRepository.java ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\EnderecoRepository.java ====
 package br.edu.ifce.meuprimeirospringboot.repository;
 
@@ -713,6 +990,19 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Long>{
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\EnderecoRepository.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\MatriculaRepository.java ====
+package br.edu.ifce.meuprimeirospringboot.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Matricula;
+
+@Repository
+public interface MatriculaRepository extends JpaRepository<Matricula, Long> {}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\MatriculaRepository.java ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\RoleRepository.java ====
 package br.edu.ifce.meuprimeirospringboot.repository;
@@ -742,6 +1032,19 @@ public interface TelefoneRepository extends JpaRepository<Telefone, Long> {
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\TelefoneRepository.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\TurmaRepository.java ====
+package br.edu.ifce.meuprimeirospringboot.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Turma;
+
+@Repository
+public interface TurmaRepository extends JpaRepository<Turma, Long> {}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\TurmaRepository.java ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\repository\UsuarioRepository.java ====
 package br.edu.ifce.meuprimeirospringboot.repository;
@@ -921,6 +1224,72 @@ public class SecurityConfig {
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\security\SecurityConfig.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\DisciplinaService.java ====
+package br.edu.ifce.meuprimeirospringboot.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Disciplina;
+import br.edu.ifce.meuprimeirospringboot.repository.DisciplinaRepository;
+
+@Service
+public class DisciplinaService {
+    @Autowired private DisciplinaRepository repo;
+    public List<Disciplina> listar() { return repo.findAll(); }
+    public Disciplina buscar(Long id) { return repo.findById(id).orElse(null); }
+    public void salvar(Disciplina d) { repo.save(d); }
+    public void excluir(Long id) { repo.deleteById(id); }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\DisciplinaService.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\MatriculaService.java ====
+package br.edu.ifce.meuprimeirospringboot.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Matricula;
+import br.edu.ifce.meuprimeirospringboot.repository.MatriculaRepository;
+
+@Service
+public class MatriculaService {
+    @Autowired private MatriculaRepository repo;
+    public List<Matricula> listar() { return repo.findAll(); }
+    public void salvar(Matricula m) { repo.save(m); }
+    public Matricula buscar(Long id) { return repo.findById(id).orElse(null); }
+    public void excluir(Long id) { repo.deleteById(id); }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\MatriculaService.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\TurmaService.java ====
+package br.edu.ifce.meuprimeirospringboot.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Turma;
+import br.edu.ifce.meuprimeirospringboot.repository.TurmaRepository;
+
+@Service
+public class TurmaService {
+    @Autowired private TurmaRepository repo;
+    public List<Turma> listar() { return repo.findAll(); }
+    public void salvar(Turma t) { repo.save(t); }
+    public Turma buscar(Long id) { return repo.findById(id).orElse(null); }
+    public void excluir(Long id) { repo.deleteById(id); }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\TurmaService.java ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\service\UsuarioService.java ====
 package br.edu.ifce.meuprimeirospringboot.service;
@@ -1140,6 +1509,11 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\MeuprimeirospringbootApplication.java ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard.html ====
+<h2>Dashboard Admin</h2> Bem-vindo, <span th:text='${nomeUsuario}'></span>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard.html ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\aluno\home.html ====
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
@@ -1154,19 +1528,23 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\aluno\home.html ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\disciplina\form.html ====
+<h2>Formulário de Disciplina</h2>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\disciplina\form.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\disciplina\lista.html ====
+<h2>Lista de Disciplinas</h2>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\disciplina\lista.html ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\footer.html ====
-<footer th:fragment="footer" class="text-center mt-4">
-    <p>&copy; 2025 - IFCE</p>
-</footer>
+<footer>Rodapé</footer>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\footer.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\header.html ====
-<head th:fragment="header">
-    <meta charset="UTF-8" />
-    <title th:text="${pageTitle}">Sistema</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css" />
-</head>
+<head><title th:text='${pageTitle}'>Sistema</title></head>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\header.html ====
 
@@ -1178,127 +1556,52 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\mensagens.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\navbar.html ====
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">Sistema Acadêmico</a>
-    <div class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                <a class="nav-link" href="/usuarios/lista">Usuários</a>
-            </li>
-            <li class="nav-item" sec:authorize="hasRole('ALUNO')">
-                <a class="nav-link" href="/aluno/home">Meu Histórico</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="/logout">Sair</a></li>
-        </ul>
-    </div>
-</nav>
+<nav>Navbar aqui</nav>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\navbar.html ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\sidebar.html ====
+<div>Sidebar dinâmica por role</div>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\sidebar.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\matricula\form.html ====
+<h2>Formulário de Matrícula</h2>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\matricula\form.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\matricula\lista.html ====
+<h2>Lista de Matrículas</h2>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\matricula\lista.html ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\form.html ====
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"></head>
-<body class="container">
-  <div th:replace="fragments/navbar :: navbar"></div>
-  <h2 th:text="${professor.id == null} ? 'Novo Professor' : 'Editar Professor'"></h2>
-  <form th:action="@{/professores/salvar}" th:object="${professor}" method="post">
-    <input type="hidden" th:field="*{id}" />
-    <div><label>Nome:</label><input th:field="*{nome}" class="form-control" /></div>
-    <div><label>Email:</label><input th:field="*{email}" class="form-control" /></div>
-    <div><label>Área de Atuação:</label><input th:field="*{areaAtuacao}" class="form-control" /></div>
-    <button type="submit" class="btn btn-primary mt-2">Salvar</button>
-  </form>
-</body>
-</html>
+<h2>Formulário de Professor</h2>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\form.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\lista.html ====
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"></head>
-<body class="container">
-  <div th:replace="fragments/navbar :: navbar"></div>
-  <h2>Professores</h2>
-  <a class="btn btn-success" href="/professores/form">Novo Professor</a>
-  <table class="table mt-3">
-    <thead><tr><th>Nome</th><th>Email</th><th>Ações</th></tr></thead>
-    <tbody>
-      <tr th:each="p : ${professores}">
-        <td th:text="${p.nome}"></td>
-        <td th:text="${p.email}"></td>
-        <td>
-          <a th:href="@{'/professores/editar/' + ${p.id}}" class="btn btn-warning">Editar</a>
-          <a th:href="@{'/professores/excluir/' + ${p.id}}" class="btn btn-danger">Excluir</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</body>
-</html>
+<h2>Lista de Professores</h2>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\lista.html ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\turma\form.html ====
+<h2>Formulário de Turma</h2>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\turma\form.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\turma\lista.html ====
+<h2>Lista de Turmas</h2>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\turma\lista.html ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\index.html ====
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/header :: header"></head>
-<body class="container mt-5">
-  <div th:replace="fragments/navbar :: navbar"></div>
-
-  <h2>Bem-vindo ao Sistema de Gestão Acadêmica</h2>
-  <p>Gerencie alunos, professores, disciplinas e turmas de forma simples.</p>
-
-  <!-- 🔓 VISITANTE (não logado) -->
-  <div sec:authorize="isAnonymous()">
-      <a class="btn btn-primary mt-3" href="/login">Fazer Login</a>
-  </div>
-
-  <!-- 🔐 ADMIN -->
-  <div sec:authorize="hasRole('ADMIN')">
-      <p class="mt-4">Você está logado como <strong>ADMINISTRADOR</strong>.</p>
-      <a class="btn btn-success" href="/admin/dashboard">Ir para o Painel Admin</a>
-  </div>
-
-  <!-- 👨‍🎓 ALUNO -->
-  <div sec:authorize="hasRole('ALUNO')">
-      <p class="mt-4">Você está logado como <strong>ALUNO</strong>.</p>
-      <a class="btn btn-info" href="/aluno/home">Ir para Área do Aluno</a>
-  </div>
-
-  <div th:replace="fragments/footer :: footer"></div>
-</body>
-</html>
+<h2>Página Inicial</h2>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\index.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\login.html ====
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"></head>
-<body class="container mt-5">
-    <div th:replace="fragments/navbar :: navbar"></div>
-
-    <h2>Login</h2>
-    <form th:action="@{/login}" method="post">
-        <div class="mb-3">
-            <label>Email:</label>
-            <input type="text" name="username" class="form-control" />
-        </div>
-        <div class="mb-3">
-            <label>Senha:</label>
-            <input type="password" name="password" class="form-control" />
-        </div>
-        <button type="submit" class="btn btn-primary">Entrar</button>
-    </form>
-
-    <div th:replace="fragments/footer :: footer"></div>
-</body>
-</html>
+<h2>Login</h2><form th:action='@{/login}' method='post'></form>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\login.html ====
 
