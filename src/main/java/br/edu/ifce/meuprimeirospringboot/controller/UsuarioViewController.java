@@ -1,5 +1,7 @@
 package br.edu.ifce.meuprimeirospringboot.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,4 +52,11 @@ public class UsuarioViewController {
         return "redirect:/usuarios/lista";
     }
 
+     @GetMapping("/home")
+    public String homeAluno(Model model, Principal principal) {
+        model.addAttribute("nomeUsuario", principal.getName()); // mostra o email do aluno
+        return "aluno/home";
+    }
 }
+
+

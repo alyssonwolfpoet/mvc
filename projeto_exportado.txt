@@ -15,8 +15,10 @@
                 |- Turma.java
                 |- Usuario.java
               |- controller
+                |- AdminController.java
                 |- DisciplinaController.java
                 |- Home.java
+                |- LoginController.java
                 |- MatriculaController.java
                 |- TurmaController.java
                 |- UsuarioController.java
@@ -78,7 +80,7 @@
           |- lista.html
         |- index.html
         |- login.html
-        |- login.oldhtml
+        |- loginaa.html
         |- usuario-form.html
         |- usuario-lista.html
       |- application.properties
@@ -297,8 +299,36 @@ public class Matricula {
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Professor.java ====
 package br.edu.ifce.meuprimeirospringboot.beans;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Professor {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nome;
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Professor.java ====
@@ -362,11 +392,10 @@ public class Telefone {
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Turma.java ====
 package br.edu.ifce.meuprimeirospringboot.beans;
 
-import org.springframework.data.annotation.Id;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -382,6 +411,39 @@ public class Turma {
 
     @ManyToOne
     private Professor professor;
+
+    // Getters e Setters (importante adicionar se não tiver)
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
+
+    public void setDisciplina(Disciplina disciplina) {
+        this.disciplina = disciplina;
+    }
+
+    public Professor getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Turma.java ====
@@ -550,6 +612,25 @@ public class Usuario {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\beans\Usuario.java ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\AdminController.java ====
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "admin/dashboard"; // nome da view Thymeleaf
+    }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\AdminController.java ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\DisciplinaController.java ====
 package br.edu.ifce.meuprimeirospringboot.controller;
 
@@ -625,6 +706,23 @@ public class Home {
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\Home.java ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\LoginController.java ====
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class LoginController {
+
+    @GetMapping("/login")
+    public String login() {
+        return "/login"; // isso renderiza o arquivo login.html em /templates
+    }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\LoginController.java ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\MatriculaController.java ====
 package br.edu.ifce.meuprimeirospringboot.controller;
@@ -1159,7 +1257,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 
 import br.edu.ifce.meuprimeirospringboot.repository.UsuarioRepository;
-import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
 
 @Configuration
 public class SecurityConfig {
@@ -1171,43 +1268,43 @@ public class SecurityConfig {
         this.customSuccessHandler = customSuccessHandler;
     }
 
-	@Bean
+    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/","/webjars/**","/css/**", "/js/**", "/image/**","/uploads/**","/static/**").permitAll()
-                .requestMatchers("/aluno/cadastrar").permitAll()
-                .requestMatchers("/aluno/confirmar-cadastro").permitAll()
-                .requestMatchers("/confirmar-email").permitAll()
-                .requestMatchers("/login","hello").permitAll()
-                //
-                .requestMatchers("/api/inscricoes/inscrever").permitAll()
-                //
-                .requestMatchers("/aluno/listar").hasRole("ADMIN")
-                .requestMatchers("/curso/cadastrar").hasRole("ADMIN") 
-                .requestMatchers("/admin/dashboard").hasRole("ADMIN")
-                .requestMatchers("/polo/cadastrar").hasRole("ADMIN")
-                
-                .anyRequest().authenticated()    
-            )
-            .logout(logout -> logout
-                    .logoutUrl("/logout")                     
-                    .logoutSuccessUrl("/?logout=true")  
-                    .invalidateHttpSession(true)             
-                    .deleteCookies("JSESSIONID")             
-                )
-            .formLogin(form -> form          
-                .loginPage("/login") 
-                // .defaultSuccessUrl("/admin/dashboard", true)
-                .successHandler(customSuccessHandler)
-                .permitAll()                 
-            )
-            .sessionManagement(session -> session
-                    .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
-                    .maximumSessions(1) 
-                    .expiredUrl("/login?expired")
-                )
-            .httpBasic(httpBasic -> httpBasic.disable()); 
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/image/**", "/uploads/**",
+                                "/static/**")
+                        .permitAll()
+                        .requestMatchers("/aluno/cadastrar").permitAll()
+                        .requestMatchers("/aluno/confirmar-cadastro").permitAll()
+                        .requestMatchers("/confirmar-email").permitAll()
+                        .requestMatchers("/login", "/hello").permitAll()
+
+                        //
+                        .requestMatchers("/api/inscricoes/inscrever").permitAll()
+                        //
+                        .requestMatchers("/aluno/listar").hasRole("ADMIN")
+                        .requestMatchers("/curso/cadastrar").hasRole("ADMIN")
+                        .requestMatchers("/admin/dashboard").hasRole("ADMIN")
+                        .requestMatchers("/polo/cadastrar").hasRole("ADMIN")
+
+                        .anyRequest().authenticated())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"))
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        // .defaultSuccessUrl("/admin/dashboard", true)
+                        .successHandler(customSuccessHandler)
+                        .permitAll())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(
+                                org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1)
+                        .expiredUrl("/login?expired"))
+                .httpBasic(httpBasic -> httpBasic.disable());
 
         return http.build();
     }
@@ -1219,8 +1316,8 @@ public class SecurityConfig {
 
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+        return new BCryptPasswordEncoder();
+    }
 }
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\security\SecurityConfig.java ====
@@ -1510,7 +1607,19 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\MeuprimeirospringbootApplication.java ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard.html ====
-<h2>Dashboard Admin</h2> Bem-vindo, <span th:text='${nomeUsuario}'></span>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body class="container mt-4">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <h2>Dashboard Admin</h2> Bem-vindo, <span th:text='${nomeUsuario}'></span>
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</html>
+
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard.html ====
 
@@ -1539,12 +1648,20 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\disciplina\lista.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\footer.html ====
-<footer>Rodapé</footer>
+<footer>Rodapé</footer><div th:fragment="footer" class="text-center mt-3">
+  <p>&copy; 2025 IFCE - SGA</p>
+</div>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\footer.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\header.html ====
-<head><title th:text='${pageTitle}'>Sistema</title></head>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header">
+  <meta charset="UTF-8"/>
+  <title th:text="${pageTitle}">Sistema Acadêmico</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css"/>
+</head>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\header.html ====
 
@@ -1556,12 +1673,41 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\mensagens.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\navbar.html ====
-<nav>Navbar aqui</nav>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">SGAIFCE</a>
+    <span class="navbar-text ms-auto" sec:authorize="isAuthenticated()">Olá, <strong sec:authentication="name"></strong>!</span>
+    <ul class="navbar-nav ms-3">
+      <li class="nav-item"><a class="nav-link" sec:authorize="isAnonymous()" href="/login">Login</a></li>
+      <li class="nav-item"><a class="nav-link" sec:authorize="isAuthenticated()" href="/logout">Sair</a></li>
+    </ul>
+  </div>
+</nav>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\navbar.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\sidebar.html ====
-<div>Sidebar dinâmica por role</div>
+<div th:fragment="sidebar" class="d-flex flex-column bg-light vh-100 p-3">
+  <nav class="nav nav-pills flex-column">
+    <a class="nav-link" href="/">Início</a>
+    <div sec:authorize="hasRole('ADMIN')">
+      <strong>Admin</strong>
+      <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+      <a class="nav-link" href="/usuarios/lista">Usuários</a>
+      <a class="nav-link" href="/professores/lista">Professores</a>
+      <a class="nav-link" href="/disciplinas/lista">Disciplinas</a>
+      <a class="nav-link" href="/turmas/lista">Turmas</a>
+      <a class="nav-link" href="/matriculas/lista">Matrículas</a>
+    </div>
+    <div sec:authorize="hasRole('ALUNO')">
+      <strong>Aluno</strong>
+      <a class="nav-link" href="/aluno/home">Área do Aluno</a>
+    </div>
+  </nav>
+</div>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\sidebar.html ====
 
@@ -1576,12 +1722,51 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\matricula\lista.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\form.html ====
-<h2>Formulário de Professor</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body class="d-flex">
+  <div th:replace="fragments/sidebar :: sidebar"></div>
+  <main class="flex-fill p-4">
+    <h2 th:text="${professor.id} != null ? 'Editar Professor' : 'Novo Professor'"></h2>
+    <form th:action="@{/professores/salvar}" th:object="${professor}" method="post">
+      <input type="hidden" th:field="*{id}"/>
+      <div class="mb-2"><label>Nome</label><input th:field="*{nome}" class="form-control"/></div>
+      <div class="mb-2"><label>Email</label><input th:field="*{email}" class="form-control"/></div>
+      <div class="mb-2"><label>Área</label><input th:field="*{areaAtuacao}" class="form-control"/></div>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+  </main>
+</body>
+<div th:replace="fragments/footer :: footer"></div>
+</html>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\form.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\lista.html ====
-<h2>Lista de Professores</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body class="d-flex">
+  <div th:replace="fragments/sidebar :: sidebar"></div>
+  <main class="flex-fill p-4">
+    <h2>Professores</h2>
+    <a class="btn btn-success mb-2" href="/professores/form">Novo</a>
+    <table class="table">
+      <tr><th>Nome</th><th>Email</th><th>Ações</th></tr>
+      <tr th:each="p: ${professores}">
+        <td th:text="${p.nome}"></td>
+        <td th:text="${p.email}"></td>
+        <td>
+          <a th:href="@{'/professores/editar/' + ${p.id}}" class="btn btn-warning btn-sm">Editar</a>
+          <a th:href="@{'/professores/excluir/' + ${p.id}}" class="btn btn-danger btn-sm">Excluir</a>
+        </td>
+      </tr>
+    </table>
+  </main>
+</body>
+<div th:replace="fragments/footer :: footer"></div>
+</html>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\lista.html ====
 
@@ -1601,9 +1786,68 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\index.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\login.html ====
-<h2>Login</h2><form th:action='@{/login}' method='post'></form>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h2>Login</h2>
+    <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+            <label>Email:</label>
+            <input type="text" name="username" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Senha:</label>
+            <input type="password" name="password" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+</body>
+</html>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\login.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\loginaa.html ====
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body class="container mt-5">
+    <h2 class="mb-4">Login</h2>
+
+    <!-- Mensagem de erro se login falhar -->
+    <div th:if="${param.error}" class="alert alert-danger">
+        Usuário ou senha inválidos.
+    </div>
+
+    <!-- Mensagem se logout ocorrer -->
+    <div th:if="${param.logout}" class="alert alert-success">
+        Você saiu com sucesso.
+    </div>
+
+    <form th:action="@{/login}" method="post" class="w-50">
+        <div class="mb-3">
+            <label for="username" class="form-label">E-mail</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Digite seu e-mail" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Digite sua senha" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+</body>
+</html>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\loginaa.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\usuario-form.html ====
 <!DOCTYPE html>

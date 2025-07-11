@@ -69,6 +69,11 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 		// USUÁRIO 1 - Fulano de Tal
 		// =====================
 		if (usuarioRepository.findByEmail("fulano@gmail.com").isEmpty()) {
+
+			// Cria role ALUNO se ainda não existir
+			Role alunoRole = roleRepository.findByName(RoleName.ALUNO)
+					.orElseGet(() -> roleRepository.save(new Role(RoleName.ALUNO)));
+
 			Usuario u = new Usuario();
 			u.setCpf("00000000000");
 			u.setNome("Fulano de Tal");
@@ -90,7 +95,9 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 
 			u.setEndereco(e);
 			u.setTelefones(List.of(t1));
-			u.setRoles(List.of()); // Nenhuma role
+			// Atribui a role ALUNO
+			u.setRoles(List.of(alunoRole));
+			// u.setRoles(List.of()); // Nenhuma role
 
 			usuarioRepository.save(u);
 			System.out.println("✅ Usuário Fulano de Tal criado.");
