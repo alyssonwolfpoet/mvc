@@ -1,9 +1,11 @@
 package br.edu.ifce.meuprimeirospringboot.serviceImpl;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
 import br.edu.ifce.meuprimeirospringboot.exceptions.UsuarioNaoEncontradoException;
@@ -57,6 +59,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public Usuario buscarPorId(Long id) {
 		return usuarioRepository.findById(id)
 				.orElseThrow(() -> new UsuarioNaoEncontradoException("ID: " + id));
+	}
+
+	@Override
+	public Usuario findByEmail(String email) {
+		return usuarioRepository.findByEmail(email)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 	}
 
 }

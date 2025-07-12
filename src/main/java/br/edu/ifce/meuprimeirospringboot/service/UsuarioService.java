@@ -17,5 +17,7 @@ public interface UsuarioService {
 
 	Usuario buscarPorId(Long id);
 
+	Usuario findByEmail(String email);
+
 
 }
