@@ -26,7 +26,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                 response.sendRedirect("/admin/dashboard");
                 return;
             } else if (role.equals("ROLE_ALUNO")) {
-                response.sendRedirect("/aluno/home");
+                response.sendRedirect("/aluno/dashboard");
                 return;
             }
         }

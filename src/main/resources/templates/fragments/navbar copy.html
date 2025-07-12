@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">SGAIFCE</a>
+    <span class="navbar-text ms-auto" sec:authorize="isAuthenticated()">Olá, <strong sec:authentication="name"></strong>!</span>
+    <ul class="navbar-nav ms-3">
+      <li class="nav-item"><a class="nav-link" sec:authorize="isAnonymous()" href="/login">Login</a></li>
+      <li class="nav-item"><a class="nav-link" sec:authorize="isAuthenticated()" href="/logout">Sair</a></li>
+    </ul>
+  </div>
+</nav>

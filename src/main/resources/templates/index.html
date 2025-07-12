@@ -1,1 +1,27 @@
-<h2>Página Inicial</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header"></head>
+<body class="container mt-5">
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <div class="text-center">
+    <h1>Bem-vindo ao Sistema de Gestão Acadêmica</h1>
+    <p>Gerencie alunos, professores, turmas e disciplinas com facilidade.</p>
+
+    <div sec:authorize="isAnonymous()">
+      <a href="/login" class="btn btn-primary">Entrar</a>
+    </div>
+
+    <div sec:authorize="hasRole('ADMIN')">
+      <a href="/admin/dashboard" class="btn btn-success">Ir para o Painel do Administrador</a>
+    </div>
+
+    <div sec:authorize="hasRole('ALUNO')">
+      <a href="/aluno/dashboard" class="btn btn-info">Ir para o Painel do Aluno</a>
+    </div>
+  </div>
+
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

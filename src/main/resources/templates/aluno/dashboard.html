@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body>
+  <div th:replace="fragments/navbar :: navbar"></div>
+  <div class="container mt-4">
+    <h2>Dashboard do Aluno</h2>
+    <p>Bem-vindo, <strong th:text="${nomeUsuario}">Aluno</strong>!</p>
+
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <a href="/matriculas/form" class="btn btn-primary btn-block w-100">Matricular em Turma</a>
+      </div>
+      <div class="col-md-4">
+        <a href="/matriculas/lista" class="btn btn-secondary btn-block w-100">Ver Minhas Matrículas</a>
+      </div>
+      <div class="col-md-4">
+        <a href="/turmas/lista" class="btn btn-info btn-block w-100">Ver Turmas Disponíveis</a>
+      </div>
+    </div>
+  </div>
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

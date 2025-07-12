@@ -16,6 +16,7 @@
                 |- Usuario.java
               |- controller
                 |- AdminController.java
+                |- AlunoController.java
                 |- DisciplinaController.java
                 |- Home.java
                 |- LoginController.java
@@ -59,6 +60,7 @@
         |- admin
           |- dashboard.html
         |- aluno
+          |- dashboard.html
           |- home.html
         |- disciplina
           |- form.html
@@ -631,6 +633,29 @@ public class AdminController {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\AdminController.java ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\AlunoController.java ====
+// ✅ 1. AlunoController.java (dashboard)
+package br.edu.ifce.meuprimeirospringboot.controller;
+
+import java.security.Principal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/aluno")
+public class AlunoController {
+
+    @GetMapping("/dashboard")
+    public String dashboardAluno(Model model, Principal principal) {
+        model.addAttribute("nomeUsuario", principal.getName());
+        return "aluno/dashboard";
+    }
+}
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\AlunoController.java ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\DisciplinaController.java ====
 package br.edu.ifce.meuprimeirospringboot.controller;
 
@@ -898,6 +923,8 @@ public class UsuarioController {
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\UsuarioViewController.java ====
 package br.edu.ifce.meuprimeirospringboot.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -948,7 +975,14 @@ public class UsuarioViewController {
         return "redirect:/usuarios/lista";
     }
 
+     @GetMapping("/home")
+    public String homeAluno(Model model, Principal principal) {
+        model.addAttribute("nomeUsuario", principal.getName()); // mostra o email do aluno
+        return "aluno/home";
+    }
 }
+
+
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\UsuarioViewController.java ====
 
@@ -1192,7 +1226,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                 response.sendRedirect("/admin/dashboard");
                 return;
             } else if (role.equals("ROLE_ALUNO")) {
-                response.sendRedirect("/aluno/home");
+                response.sendRedirect("/aluno/dashboard");
                 return;
             }
         }
@@ -1551,6 +1585,11 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 		// USUÁRIO 1 - Fulano de Tal
 		// =====================
 		if (usuarioRepository.findByEmail("fulano@gmail.com").isEmpty()) {
+
+			// Cria role ALUNO se ainda não existir
+			Role alunoRole = roleRepository.findByName(RoleName.ALUNO)
+					.orElseGet(() -> roleRepository.save(new Role(RoleName.ALUNO)));
+
 			Usuario u = new Usuario();
 			u.setCpf("00000000000");
 			u.setNome("Fulano de Tal");
@@ -1572,7 +1611,9 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 
 			u.setEndereco(e);
 			u.setTelefones(List.of(t1));
-			u.setRoles(List.of()); // Nenhuma role
+			// Atribui a role ALUNO
+			u.setRoles(List.of(alunoRole));
+			// u.setRoles(List.of()); // Nenhuma role
 
 			usuarioRepository.save(u);
 			System.out.println("✅ Usuário Fulano de Tal criado.");
@@ -1623,15 +1664,46 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard.html ====
 
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\aluno\dashboard.html ====
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body>
+  <div th:replace="fragments/navbar :: navbar"></div>
+  <div class="container mt-4">
+    <h2>Dashboard do Aluno</h2>
+    <p>Bem-vindo, <strong th:text="${nomeUsuario}">Aluno</strong>!</p>
+
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <a href="/matriculas/form" class="btn btn-primary btn-block w-100">Matricular em Turma</a>
+      </div>
+      <div class="col-md-4">
+        <a href="/matriculas/lista" class="btn btn-secondary btn-block w-100">Ver Minhas Matrículas</a>
+      </div>
+      <div class="col-md-4">
+        <a href="/turmas/lista" class="btn btn-info btn-block w-100">Ver Turmas Disponíveis</a>
+      </div>
+    </div>
+  </div>
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\aluno\dashboard.html ====
+
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\aluno\home.html ====
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"></head>
-<body class="container mt-4">
-    <div th:replace="fragments/navbar :: navbar"></div>
-    <h2>Bem-vindo, Aluno!</h2>
-    <p>Aqui você verá suas turmas, notas e matrícula.</p>
-    <div th:replace="fragments/footer :: footer"></div>
+<body>
+  <div th:replace="fragments/navbar :: navbar"></div>
+  <div class="container mt-5">
+    <h2>Área do Aluno</h2>
+    <p>Bem-vindo, <strong th:text="${nomeUsuario}">aluno@ifce.edu.br</strong>!</p>
+    <a href="/logout" class="btn btn-outline-danger">Sair</a>
+  </div>
+  <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
 
@@ -1781,7 +1853,33 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\turma\lista.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\index.html ====
-<h2>Página Inicial</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header"></head>
+<body class="container mt-5">
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <div class="text-center">
+    <h1>Bem-vindo ao Sistema de Gestão Acadêmica</h1>
+    <p>Gerencie alunos, professores, turmas e disciplinas com facilidade.</p>
+
+    <div sec:authorize="isAnonymous()">
+      <a href="/login" class="btn btn-primary">Entrar</a>
+    </div>
+
+    <div sec:authorize="hasRole('ADMIN')">
+      <a href="/admin/dashboard" class="btn btn-success">Ir para o Painel do Administrador</a>
+    </div>
+
+    <div sec:authorize="hasRole('ALUNO')">
+      <a href="/aluno/dashboard" class="btn btn-info">Ir para o Painel do Aluno</a>
+    </div>
+  </div>
+
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\index.html ====
 
