@@ -1,19 +1,20 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- src/main/resources/templates/fragments/navbar.html -->
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">SGAIFCE</a>
 
+    <!-- Nome do usuário logado -->
     <span class="navbar-text ms-auto" sec:authorize="isAuthenticated()">
-      Olá, <strong th:text="${nomeUsuario}">Usuário</strong>!
+      Olá, <strong sec:authentication="name">Usuário</strong>!
     </span>
 
     <ul class="navbar-nav ms-3">
+      <!-- Se não estiver logado, aparece Login -->
       <li class="nav-item" sec:authorize="isAnonymous()">
         <a class="nav-link" href="/login">Login</a>
       </li>
 
+      <!-- Se estiver logado, aparece botão de logout -->
       <li class="nav-item" sec:authorize="isAuthenticated()">
         <form th:action="@{/logout}" method="post" style="display:inline;">
           <button type="submit" class="btn btn-link nav-link">Sair</button>
