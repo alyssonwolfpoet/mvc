@@ -1,3 +1,4 @@
+<!-- templates/professor/form.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"></head>
@@ -8,11 +9,9 @@
     <form th:action="@{/professores/salvar}" th:object="${professor}" method="post">
       <input type="hidden" th:field="*{id}"/>
       <div class="mb-2"><label>Nome</label><input th:field="*{nome}" class="form-control"/></div>
-      <div class="mb-2"><label>Email</label><input th:field="*{email}" class="form-control"/></div>
-      <div class="mb-2"><label>Área</label><input th:field="*{areaAtuacao}" class="form-control"/></div>
       <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
   </main>
+  <div th:replace="fragments/footer :: footer"></div>
 </body>
-<div th:replace="fragments/footer :: footer"></div>
 </html>

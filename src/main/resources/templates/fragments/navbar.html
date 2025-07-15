@@ -1,20 +1,21 @@
-<!-- src/main/resources/templates/fragments/navbar.html -->
+<!-- fragments/navbar.html -->
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">SGAIFCE</a>
 
-    <!-- Nome do usuário logado -->
+    <!-- Olá, Fulano de Tal! -->
     <span class="navbar-text ms-auto" sec:authorize="isAuthenticated()">
-      Olá, <strong sec:authentication="name">Usuário</strong>!
+      Olá, <strong th:text="${nomeUsuario}">Usuário</strong>!
     </span>
 
     <ul class="navbar-nav ms-3">
-      <!-- Se não estiver logado, aparece Login -->
+
+      <!-- Se NÃO estiver logado, mostra Login -->
       <li class="nav-item" sec:authorize="isAnonymous()">
         <a class="nav-link" href="/login">Login</a>
       </li>
 
-      <!-- Se estiver logado, aparece botão de logout -->
+      <!-- Se estiver logado, mostra Sair -->
       <li class="nav-item" sec:authorize="isAuthenticated()">
         <form th:action="@{/logout}" method="post" style="display:inline;">
           <button type="submit" class="btn btn-link nav-link">Sair</button>

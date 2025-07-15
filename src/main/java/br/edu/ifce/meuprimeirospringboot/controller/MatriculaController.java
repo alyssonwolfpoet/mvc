@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.edu.ifce.meuprimeirospringboot.beans.Matricula;
+import br.edu.ifce.meuprimeirospringboot.repository.TurmaRepository;
+import br.edu.ifce.meuprimeirospringboot.repository.UsuarioRepository;
 import br.edu.ifce.meuprimeirospringboot.service.MatriculaService;
 
 @Controller
@@ -17,6 +19,12 @@ import br.edu.ifce.meuprimeirospringboot.service.MatriculaService;
 public class MatriculaController {
     @Autowired
     private MatriculaService service;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository; // para os alunos
+
+    @Autowired
+    private TurmaRepository turmaRepository; // para as turmas
 
     @GetMapping("/lista")
     public String listar(Model model) {
@@ -27,6 +35,8 @@ public class MatriculaController {
     @GetMapping("/form")
     public String form(Model model) {
         model.addAttribute("matricula", new Matricula());
+        model.addAttribute("alunos", usuarioRepository.findAll());
+        model.addAttribute("turmas", turmaRepository.findAll());
         return "matricula/form";
     }
 
@@ -39,6 +49,8 @@ public class MatriculaController {
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("matricula", service.buscar(id));
+        model.addAttribute("alunos", usuarioRepository.findAll());
+        model.addAttribute("turmas", turmaRepository.findAll());
         return "matricula/form";
     }
 

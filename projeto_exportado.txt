@@ -58,6 +58,7 @@
       |- static
       |- templates
         |- admin
+          |- dashboard copy.html
           |- dashboard.html
         |- aluno
           |- dashboard.html
@@ -69,6 +70,7 @@
           |- footer.html
           |- header.html
           |- mensagens.html
+          |- navbar copy.html
           |- navbar.html
           |- sidebar.html
         |- matricula
@@ -617,17 +619,29 @@ public class Usuario {
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\controller\AdminController.java ====
 package br.edu.ifce.meuprimeirospringboot.controller;
 
+import java.security.Principal;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
+import br.edu.ifce.meuprimeirospringboot.service.UsuarioService;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     @GetMapping("/dashboard")
-    public String dashboard() {
-        return "admin/dashboard"; // nome da view Thymeleaf
+    public String dashboard(Model model, Principal principal) {
+        Usuario usuario = usuarioService.findByEmail(principal.getName());
+        model.addAttribute("nomeUsuario", usuario.getNome());
+        return "admin/dashboard";
     }
 }
 
@@ -1442,6 +1456,8 @@ public interface UsuarioService {
 
 	Usuario buscarPorId(Long id);
 
+	Usuario findByEmail(String email);
+
 
 }
 
@@ -1450,10 +1466,12 @@ public interface UsuarioService {
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\serviceImpl\UsuarioServiceImpl.java ====
 package br.edu.ifce.meuprimeirospringboot.serviceImpl;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import br.edu.ifce.meuprimeirospringboot.beans.Usuario;
 import br.edu.ifce.meuprimeirospringboot.exceptions.UsuarioNaoEncontradoException;
@@ -1507,6 +1525,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public Usuario buscarPorId(Long id) {
 		return usuarioRepository.findById(id)
 				.orElseThrow(() -> new UsuarioNaoEncontradoException("ID: " + id));
+	}
+
+	@Override
+	public Usuario findByEmail(String email) {
+		return usuarioRepository.findByEmail(email)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 	}
 
 }
@@ -1647,20 +1671,70 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\java\br\edu\ifce\meuprimeirospringboot\MeuprimeirospringbootApplication.java ====
 
-==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard.html ====
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard copy.html ====
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"></head>
 <body class="container mt-4">
-    <div th:replace="fragments/sidebar :: sidebar"></div>
     <div th:replace="fragments/navbar :: navbar"></div>
-    <h2>Dashboard Admin</h2> Bem-vindo, <span th:text='${nomeUsuario}'></span>
+     <h2>Dashboard Admin</h2> Bem-vindo, <span th:text='${nomeUsuario}'></span>
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+   
     <div th:replace="fragments/footer :: footer"></div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>
 
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard copy.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard.html ====
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header"></head>
+<body>
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <div class="container-fluid">
+    <div class="row">
+      
+      <!-- Sidebar -->
+      <div class="col-md-3">
+        <div th:replace="fragments/sidebar :: sidebar"></div>
+      </div>
+
+      <!-- Conteúdo principal -->
+      <div class="col-md-9 mt-4">
+        <h2>Dashboard do Administrador</h2>
+        <p>Bem-vindo, <strong th:text="${nomeUsuario}">Usuário</strong>!</p>
+
+        <div class="row mt-4">
+          <div class="col-md-4 mb-3">
+            <a href="/usuarios/lista" class="btn btn-outline-primary w-100">Gerenciar Alunos</a>
+          </div>
+          <div class="col-md-4 mb-3">
+            <a href="/professor/lista" class="btn btn-outline-primary w-100">Gerenciar Professores</a>
+          </div>
+          <div class="col-md-4 mb-3">
+            <a href="/disciplinas/lista" class="btn btn-outline-primary w-100">Gerenciar Disciplinas</a>
+          </div>
+          <div class="col-md-4 mb-3">
+            <a href="/turmas/lista" class="btn btn-outline-primary w-100">Gerenciar Turmas</a>
+          </div>
+          <div class="col-md-4 mb-3">
+            <a href="/matriculas/lista" class="btn btn-outline-primary w-100">Gerenciar Matrículas</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\admin\dashboard.html ====
 
@@ -1727,10 +1801,9 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\footer.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\header.html ====
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="header">
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title th:text="${pageTitle}">Sistema Acadêmico</title>
   <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css"/>
 </head>
@@ -1744,7 +1817,7 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\mensagens.html ====
 
-==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\navbar.html ====
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\navbar copy.html ====
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -1755,6 +1828,36 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
     <ul class="navbar-nav ms-3">
       <li class="nav-item"><a class="nav-link" sec:authorize="isAnonymous()" href="/login">Login</a></li>
       <li class="nav-item"><a class="nav-link" sec:authorize="isAuthenticated()" href="/logout">Sair</a></li>
+    </ul>
+  </div>
+</nav>
+
+==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\navbar copy.html ====
+
+==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\navbar.html ====
+<!-- fragments/navbar.html -->
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">SGAIFCE</a>
+
+    <!-- Olá, Fulano de Tal! -->
+    <span class="navbar-text ms-auto" sec:authorize="isAuthenticated()">
+      Olá, <strong th:text="${nomeUsuario}">Usuário</strong>!
+    </span>
+
+    <ul class="navbar-nav ms-3">
+
+      <!-- Se NÃO estiver logado, mostra Login -->
+      <li class="nav-item" sec:authorize="isAnonymous()">
+        <a class="nav-link" href="/login">Login</a>
+      </li>
+
+      <!-- Se estiver logado, mostra Sair -->
+      <li class="nav-item" sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-link nav-link">Sair</button>
+        </form>
+      </li>
     </ul>
   </div>
 </nav>
@@ -2152,6 +2255,10 @@ If you manually switch to a different parent and actually want the inheritance, 
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
 			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
 	</dependencies>
 

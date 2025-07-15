@@ -1,1 +1,36 @@
-<h2>Formulário de Matrícula</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body class="container mt-4">
+
+  <div th:replace="fragments/navbar :: navbar"></div>
+  <div th:replace="fragments/sidebar :: sidebar"></div>
+
+  <h2 th:text="${matricula.id != null} ? 'Editar Matrícula' : 'Nova Matrícula'">Formulário de Matrícula</h2>
+
+  <form th:action="@{/matriculas/salvar}" th:object="${matricula}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <!-- Seleção do Aluno -->
+    <div class="mb-3">
+      <label for="aluno">Aluno:</label>
+      <select id="aluno" class="form-select" th:field="*{aluno}">
+        <option th:each="aluno : ${alunos}" th:value="${aluno.id}" th:text="${aluno.nome}">Aluno</option>
+      </select>
+    </div>
+
+    <!-- Seleção da Turma -->
+    <div class="mb-3">
+      <label for="turma">Turma:</label>
+      <select id="turma" class="form-select" th:field="*{turma}">
+        <option th:each="turma : ${turmas}" th:value="${turma.id}" th:text="${turma.nome}">Turma</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a th:href="@{/matriculas/lista}" class="btn btn-secondary">Cancelar</a>
+  </form>
+
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
