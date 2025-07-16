@@ -1,1 +1,41 @@
-<h2>Formulário de Disciplina</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body class="container mt-4">
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <h2 class="mb-4">Cadastro de Disciplina</h2>
+
+  <form th:action="@{/disciplinas/salvar}" th:object="${disciplina}" method="post" class="row g-3">
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <div class="col-md-6">
+      <label for="nome" class="form-label">Nome da Disciplina</label>
+      <input type="text" class="form-control" id="nome" th:field="*{nome}" required/>
+    </div>
+
+    <div class="col-md-3">
+      <label for="ano" class="form-label">Ano</label>
+      <input type="text" class="form-control" id="ano" th:field="*{ano}" required/>
+    </div>
+
+    <div class="col-md-3">
+      <label for="periodo" class="form-label">Período</label>
+      <input type="text" class="form-control" id="periodo" th:field="*{periodo}" required/>
+    </div>
+
+    <div class="col-md-6">
+      <label for="professor" class="form-label">Professor</label>
+      <input type="text" class="form-control" id="professor" th:field="*{professor}" required/>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a href="/disciplinas/lista" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </form>
+
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

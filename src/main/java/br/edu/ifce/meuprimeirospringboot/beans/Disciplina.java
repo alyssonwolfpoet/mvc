@@ -1,6 +1,5 @@
 package br.edu.ifce.meuprimeirospringboot.beans;
 
-
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -14,15 +13,17 @@ public class Disciplina {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	private String ano;
-	
+
 	private String periodo;
-	
+
 	private String nome;
-	
+
 	private String professor;
-	
+
+	private Integer cargaHoraria;
+
 	@ManyToMany(mappedBy = "disciplinas")
 	private List<Usuario> alunos;
 
@@ -74,8 +75,12 @@ public class Disciplina {
 		this.alunos = alunos;
 	}
 
-	
-	
-	
-	
+	public Integer getCargaHoraria() {
+		return cargaHoraria;
+	}
+
+	public void setCargaHoraria(Integer cargaHoraria) {
+		this.cargaHoraria = cargaHoraria;
+	}
+
 }

@@ -1,1 +1,36 @@
-<h2>Lista de Disciplinas</h2>
+<!-- src/main/resources/templates/disciplina/lista.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class="container mt-5">
+    <h2>Lista de Disciplinas</h2>
+    <a href="/disciplinas/form" class="btn btn-primary mb-3">Nova Disciplina</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Carga Horária</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="disciplina : ${disciplinas}">
+                <td th:text="${disciplina.id}"></td>
+                <td th:text="${disciplina.nome}"></td>
+                <td th:text="${disciplina.cargaHoraria} + ' h'"></td>
+                <td>
+                    <a th:href="@{/disciplinas/editar/{id}(id=${disciplina.id})}" class="btn btn-warning btn-sm">Editar</a>
+                    <a th:href="@{/disciplinas/excluir/{id}(id=${disciplina.id})}" class="btn btn-danger btn-sm" 
+                       onclick="return confirm('Tem certeza que deseja excluir esta disciplina?')">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

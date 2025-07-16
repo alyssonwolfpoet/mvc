@@ -776,6 +776,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.edu.ifce.meuprimeirospringboot.beans.Matricula;
+import br.edu.ifce.meuprimeirospringboot.repository.TurmaRepository;
+import br.edu.ifce.meuprimeirospringboot.repository.UsuarioRepository;
 import br.edu.ifce.meuprimeirospringboot.service.MatriculaService;
 
 @Controller
@@ -783,6 +785,12 @@ import br.edu.ifce.meuprimeirospringboot.service.MatriculaService;
 public class MatriculaController {
     @Autowired
     private MatriculaService service;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository; // para os alunos
+
+    @Autowired
+    private TurmaRepository turmaRepository; // para as turmas
 
     @GetMapping("/lista")
     public String listar(Model model) {
@@ -793,6 +801,8 @@ public class MatriculaController {
     @GetMapping("/form")
     public String form(Model model) {
         model.addAttribute("matricula", new Matricula());
+        model.addAttribute("alunos", usuarioRepository.findAll());
+        model.addAttribute("turmas", turmaRepository.findAll());
         return "matricula/form";
     }
 
@@ -805,6 +815,8 @@ public class MatriculaController {
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("matricula", service.buscar(id));
+        model.addAttribute("alunos", usuarioRepository.findAll());
+        model.addAttribute("turmas", turmaRepository.findAll());
         return "matricula/form";
     }
 
@@ -1887,7 +1899,42 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\fragments\sidebar.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\matricula\form.html ====
-<h2>Formulário de Matrícula</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"></head>
+<body class="container mt-4">
+
+  <div th:replace="fragments/navbar :: navbar"></div>
+  <div th:replace="fragments/sidebar :: sidebar"></div>
+
+  <h2 th:text="${matricula.id != null} ? 'Editar Matrícula' : 'Nova Matrícula'">Formulário de Matrícula</h2>
+
+  <form th:action="@{/matriculas/salvar}" th:object="${matricula}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <!-- Seleção do Aluno -->
+    <div class="mb-3">
+      <label for="aluno">Aluno:</label>
+      <select id="aluno" class="form-select" th:field="*{aluno}">
+        <option th:each="aluno : ${alunos}" th:value="${aluno.id}" th:text="${aluno.nome}">Aluno</option>
+      </select>
+    </div>
+
+    <!-- Seleção da Turma -->
+    <div class="mb-3">
+      <label for="turma">Turma:</label>
+      <select id="turma" class="form-select" th:field="*{turma}">
+        <option th:each="turma : ${turmas}" th:value="${turma.id}" th:text="${turma.nome}">Turma</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a th:href="@{/matriculas/lista}" class="btn btn-secondary">Cancelar</a>
+  </form>
+
+  <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\matricula\form.html ====
 
@@ -1897,6 +1944,7 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\matricula\lista.html ====
 
 ==== INICIO: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\form.html ====
+<!-- templates/professor/form.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"></head>
@@ -1907,13 +1955,11 @@ public class MeuprimeirospringbootApplication implements CommandLineRunner {
     <form th:action="@{/professores/salvar}" th:object="${professor}" method="post">
       <input type="hidden" th:field="*{id}"/>
       <div class="mb-2"><label>Nome</label><input th:field="*{nome}" class="form-control"/></div>
-      <div class="mb-2"><label>Email</label><input th:field="*{email}" class="form-control"/></div>
-      <div class="mb-2"><label>Área</label><input th:field="*{areaAtuacao}" class="form-control"/></div>
       <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
   </main>
+  <div th:replace="fragments/footer :: footer"></div>
 </body>
-<div th:replace="fragments/footer :: footer"></div>
 </html>
 
 ==== FIM: C:\Users\Alysson\Desktop\myprojeto\tjw2025.1\src\main\resources\templates\professor\form.html ====
