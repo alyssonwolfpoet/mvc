@@ -1,41 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"></head>
-<body class="container mt-4">
+<body>
   <div th:replace="fragments/navbar :: navbar"></div>
+  <div class="container mt-4">
+    <h2 th:text="${disciplina.id != null} ? 'Editar Disciplina' : 'Nova Disciplina'"></h2>
 
-  <h2 class="mb-4">Cadastro de Disciplina</h2>
+    <form th:action="@{/disciplinas/salvar}" th:object="${disciplina}" method="post">
+      <input type="hidden" th:field="*{id}" />
 
-  <form th:action="@{/disciplinas/salvar}" th:object="${disciplina}" method="post" class="row g-3">
+      <div class="mb-3">
+        <label for="nome">Nome</label>
+        <input id="nome" th:field="*{nome}" class="form-control" />
+      </div>
 
-    <input type="hidden" th:field="*{id}"/>
+      <div class="mb-3">
+        <label for="ano">Ano</label>
+        <input id="ano" th:field="*{ano}" class="form-control" />
+      </div>
 
-    <div class="col-md-6">
-      <label for="nome" class="form-label">Nome da Disciplina</label>
-      <input type="text" class="form-control" id="nome" th:field="*{nome}" required/>
-    </div>
+      <div class="mb-3">
+        <label for="periodo">Período</label>
+        <input id="periodo" th:field="*{periodo}" class="form-control" />
+      </div>
 
-    <div class="col-md-3">
-      <label for="ano" class="form-label">Ano</label>
-      <input type="text" class="form-control" id="ano" th:field="*{ano}" required/>
-    </div>
+      <div class="mb-3">
+        <label for="professor">Professor</label>
+        <input id="professor" th:field="*{professor}" class="form-control" />
+      </div>
 
-    <div class="col-md-3">
-      <label for="periodo" class="form-label">Período</label>
-      <input type="text" class="form-control" id="periodo" th:field="*{periodo}" required/>
-    </div>
-
-    <div class="col-md-6">
-      <label for="professor" class="form-label">Professor</label>
-      <input type="text" class="form-control" id="professor" th:field="*{professor}" required/>
-    </div>
-
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">Salvar</button>
-      <a href="/disciplinas/lista" class="btn btn-secondary">Cancelar</a>
-    </div>
-  </form>
-
+      <button type="submit" class="btn btn-success">Salvar</button>
+      <a th:href="@{/disciplinas/lista}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
   <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
